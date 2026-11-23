@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PasswordCheckerCard from './components/PasswordCheckerCard';
 import PasswordGeneratorCard from './components/PasswordGeneratorCard';
 import KAnonymityExplainer from './components/KAnonymityExplainer';
@@ -7,6 +7,16 @@ import './App.css';
 function App() {
   const [password, setPassword] = useState('');
   const [notification, setNotification] = useState('');
+  const [theme, setTheme] = useState('dark');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   const handleInspectGeneratedPassword = (generatedPwd) => {
     setPassword(generatedPwd);
@@ -15,14 +25,27 @@ function App() {
   };
 
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${theme}-theme`} data-theme={theme}>
       {/* 글로벌 상단 헤더 */}
       <header className="dashboard-header">
-        <div className="header-badge-row">
-          <span className="badge badge-cyber">CYBERSECURITY LAB</span>
-          <span className="badge badge-neutral">k-Anonymity Engine</span>
-          <span className="badge badge-success">Zero Storage Policy</span>
+        <div className="header-top-bar">
+          <div className="header-badge-row">
+            <span className="badge badge-cyber">CYBERSECURITY LAB</span>
+            <span className="badge badge-neutral">k-Anonymity Engine</span>
+            <span className="badge badge-success">Zero Storage Policy</span>
+          </div>
+
+          <button
+            type="button"
+            className="theme-toggle-btn"
+            onClick={toggleTheme}
+            title={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            aria-label="화면 모드 전환"
+          >
+            {theme === 'dark' ? '☀️ 라이트 모드' : '🌙 다크 모드'}
+          </button>
         </div>
+
         <h1 className="header-title">
           <span className="gradient-text">비밀번호 보안 점검 대시보드</span>
         </h1>
